@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import {
   LayoutDashboard, TrendingUp, ReceiptIndianRupee, Boxes, FileUp, CopyX,
-  Tags, Store, ClipboardList, Settings, LogOut, ShieldCheck, User,
+  Tags, Store, ClipboardList, Settings, LogOut, ShieldCheck, User, Cloud, HardDrive,
 } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
 import { Badge } from '@/components/ui/badge';
@@ -21,7 +21,7 @@ const nav = [
 ] as const;
 
 export default function Layout() {
-  const { role, logout, pendingDupCount } = useApp();
+  const { role, logout, pendingDupCount, mode, syncError } = useApp();
   const navigate = useNavigate();
 
   return (
@@ -30,6 +30,22 @@ export default function Layout() {
         <div className="border-b border-slate-700/60 px-5 py-5">
           <div className="text-lg font-bold tracking-tight text-white">Rakhi 2026 Project</div>
           <div className="mt-0.5 text-xs text-slate-400">DeoDap · Profit &amp; Loss Tracker</div>
+          <div className="mt-2">
+            {mode === 'shared' ? (
+              <Badge className="bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/15" title="Connected to the shared Supabase database — the whole team sees the same data">
+                <Cloud className="mr-1 h-3 w-3" /> Shared · team data
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="bg-slate-700/60 text-slate-300 hover:bg-slate-700/60" title="Data is stored only in this browser">
+                <HardDrive className="mr-1 h-3 w-3" /> Local only
+              </Badge>
+            )}
+          </div>
+          {syncError && (
+            <div className="mt-2 rounded-md bg-red-500/15 px-2 py-1.5 text-[11px] leading-snug text-red-300">
+              {syncError}
+            </div>
+          )}
         </div>
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
           {nav.map((item) => {
